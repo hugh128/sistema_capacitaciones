@@ -29,8 +29,8 @@
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Ingreso</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="emp in employeeList" :key="emp.id">
+          <tbody class="bg-white divide-y divide-gray-200 " >
+            <tr v-for="emp in employeeList" :key="emp.id" class="cursor-pointer hover:bg-indigo-50 transition" @click="goToColaborador(emp.id)">
               <td class="px-6 py-4 whitespace-nowrap">{{ emp.name }}</td>
               <td class="px-6 py-4 whitespace-nowrap">{{ emp.role }}</td>
               <td class="px-6 py-4 whitespace-nowrap">{{ emp.dept }}</td>
@@ -44,12 +44,26 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, inject } from 'vue';
+import { reactive, inject, ref } from 'vue';
 import type { Ref, InjectionKey } from 'vue';
 import type { User } from '../../../types/types.ts';
-
+import {RouterLink, useRouter, type Router } from 'vue-router';
+import { useRoute } from 'vue-router'
+const router = useRouter();
 const usersKey: InjectionKey<Ref<User[]>> = Symbol('users');
-const users = inject(usersKey) as Ref<User[]>;
+const routes = useRoute();
+const id = routes.params.id as string;
+console.log('ID del colaborador:', id);
+
+
+// Simulacion de datos iniciales 
+const usuariosRespaldo = ref<User[]>([
+  { id: 1, name: 'Juan Pérez', role: 'Empleado', dept: 'Finanzas', joinDate: '2021-11-01' },
+  { id: 2, name: 'Ana Martinez', role: 'Analista', dept: 'Marketing', joinDate: '2022-11-30' },
+  { id: 3, name: 'Luis Rodriguez', role: 'Desarrollador', dept: 'IT', joinDate: '2021-06-20' },
+]);
+
+const users = inject(usersKey, usuariosRespaldo) as Ref<User[]>;
 const newEmployee = reactive({ name: '', position: '', department: '' });
 
 const handleAddEmployee = (e: Event) => {
@@ -63,4 +77,9 @@ const handleAddEmployee = (e: Event) => {
 
 // Expose variables and functions to the template
 const employeeList = users;
+
+const goToColaborador = (id: number) => {
+  router.push({ name: 'Detalle', params: { id } });
+};
+
 </script>

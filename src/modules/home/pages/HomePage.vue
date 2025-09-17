@@ -83,8 +83,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, provide, ref } from 'vue';
 import type { User, Training } from '../../../types/types.ts';
+
 
 // Mock data for the dashboard
 const users = ref<User[]>([
@@ -119,4 +120,6 @@ const trainingsByStatus = (status: string) => {
 const upcomingTrainings = computed(() => {
   return mockTrainings.value.filter(t => t.status !== 'Validada' && t.status !== 'Vencida');
 });
+
+
 </script>
